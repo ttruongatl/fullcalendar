@@ -10,13 +10,13 @@ import {
 } from '../util'
 import Scroller from '../common/Scroller'
 import View from '../View'
-import TimeGrid from './TimeGrid'
-import DayGrid from '../basic/DayGrid'
+import TechnicianTimeGrid from './TechnicianTimeGrid'
+// import DayGrid from '../basic/DayGrid'
 
 const AGENDA_ALL_DAY_EVENT_LIMIT = 5
 
 let agendaTimeGridMethods
-let agendaDayGridMethods
+// let agendaDayGridMethods
 
 
 /* An abstract class for all agenda-related views. Displays one more columns with time slots running vertically.
@@ -28,7 +28,7 @@ export default class AgendaView extends View {
 
   // initialized after class
   timeGridClass: any // class used to instantiate the timeGrid. subclasses can override
-  dayGridClass: any // class used to instantiate the dayGrid. subclasses can override
+  // dayGridClass: any // class used to instantiate the dayGrid. subclasses can override
 
   timeGrid: any // the main time-grid subcomponent of this view
   dayGrid: any // the "all-day" subcomponent. if all-day is turned off, this will be null
@@ -40,14 +40,15 @@ export default class AgendaView extends View {
 
   constructor(calendar, viewSpec) {
     super(calendar, viewSpec)
+    console.log('AgendaView')
 
     this.timeGrid = this.instantiateTimeGrid()
     this.addChild(this.timeGrid)
 
-    if (this.opt('allDaySlot')) { // should we display the "all-day" area?
-      this.dayGrid = this.instantiateDayGrid() // the all-day subcomponent of this view
-      this.addChild(this.dayGrid)
-    }
+    // if (this.opt('allDaySlot')) { // should we display the "all-day" area?
+    //   this.dayGrid = this.instantiateDayGrid() // the all-day subcomponent of this view
+    //   this.addChild(this.dayGrid)
+    // }
 
     this.scroller = new Scroller({
       overflowX: 'hidden',
@@ -65,11 +66,11 @@ export default class AgendaView extends View {
 
 
   // Instantiates the DayGrid object this view might need. Draws from this.dayGridClass
-  instantiateDayGrid() {
-    let dayGrid = new this.dayGridClass(this)
-    copyOwnProps(agendaDayGridMethods, dayGrid)
-    return dayGrid
-  }
+  // instantiateDayGrid() {
+  //   let dayGrid = new this.dayGridClass(this)
+  //   copyOwnProps(agendaDayGridMethods, dayGrid)
+  //   return dayGrid
+  // }
 
 
   /* Rendering
@@ -366,8 +367,8 @@ export default class AgendaView extends View {
 }
 
 
-AgendaView.prototype.timeGridClass = TimeGrid
-AgendaView.prototype.dayGridClass = DayGrid
+AgendaView.prototype.timeGridClass = TechnicianTimeGrid
+// AgendaView.prototype.dayGridClass = DayGrid
 
 
 // Will customize the rendering behavior of the AgendaView's timeGrid
@@ -416,30 +417,30 @@ agendaTimeGridMethods = {
 
 
 // Will customize the rendering behavior of the AgendaView's dayGrid
-agendaDayGridMethods = {
+// agendaDayGridMethods = {
 
-  // Generates the HTML that goes before the all-day cells
-  renderBgIntroHtml() {
-    let view = this.view
+//   // Generates the HTML that goes before the all-day cells
+//   renderBgIntroHtml() {
+//     let view = this.view
 
-    return '' +
-      '<td class="fc-axis ' + view.calendar.theme.getClass('widgetContent') + '" ' + view.axisStyleAttr() + '>' +
-        '<span>' + // needed for matchCellWidths
-          view.getAllDayHtml() +
-        '</span>' +
-      '</td>'
-  },
+//     return '' +
+//       '<td class="fc-axis ' + view.calendar.theme.getClass('widgetContent') + '" ' + view.axisStyleAttr() + '>' +
+//         '<span>' + // needed for matchCellWidths
+//           view.getAllDayHtml() +
+//         '</span>' +
+//       '</td>'
+//   },
 
 
-  // Generates the HTML that goes before all other types of cells.
-  // Affects content-skeleton, helper-skeleton, highlight-skeleton for both the time-grid and day-grid.
-  renderIntroHtml() {
-    let view = this.view
+//   // Generates the HTML that goes before all other types of cells.
+//   // Affects content-skeleton, helper-skeleton, highlight-skeleton for both the time-grid and day-grid.
+//   renderIntroHtml() {
+//     let view = this.view
 
-    return '<td class="fc-axis" ' + view.axisStyleAttr() + '></td>'
-  }
+//     return '<td class="fc-axis" ' + view.axisStyleAttr() + '></td>'
+//   }
 
-}
+// }
 
 
 function groupEventFootprintsByAllDay(eventFootprints) {

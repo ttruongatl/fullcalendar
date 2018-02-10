@@ -13,7 +13,7 @@ export const globalDefaults = {
 
   // display
   columnHeader: true,
-  defaultView: 'month',
+  defaultView: 'agendaTechnicians',
   aspectRatio: 1.35,
   header: {
     left: 'title',
