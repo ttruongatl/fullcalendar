@@ -616,10 +616,12 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
 
   getHitFootprint(hit) {
+    console.log('hit:', hit)
     let start = this.getCellTechnician(0, hit.col) // row=0
     let time = this.computeSnapTime(hit.snap) // pass in the snap-index
     let end
-
+    console.log('start:', start)
+    console.log('time:', time)
     start.time(time)
     end = start.clone().add(this.snapDuration)
 
