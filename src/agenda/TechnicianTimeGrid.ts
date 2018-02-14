@@ -623,7 +623,8 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
     return new ComponentFootprint(
       new UnzonedRange(start, end),
-      false // all-day?
+      false, // all-day?
+      technicianSchedule
     )
   }
 
