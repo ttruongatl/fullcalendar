@@ -214,7 +214,7 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
     this.slatContainerEl = this.el.find('> .fc-slats')
       .html( // avoids needing ::unrenderSlats()
         '<table class="' + theme.getClass('tableGrid') + '">' +
-          this.renderSlatRowHtml() +
+        this.renderSlatRowHtml() +
         '</table>'
       )
 
@@ -248,21 +248,21 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
       axisHtml =
         '<td class="fc-axis fc-time ' + theme.getClass('widgetContent') + '" ' + view.axisStyleAttr() + '>' +
-          (isLabeled ?
-            '<span>' + // for matchCellWidths
-              htmlEscape(slotDate.format(this.labelFormat)) +
-            '</span>' :
-            ''
-            ) +
+        (isLabeled ?
+          '<span>' + // for matchCellWidths
+          htmlEscape(slotDate.format(this.labelFormat)) +
+          '</span>' :
+          ''
+        ) +
         '</td>'
 
       html +=
         '<tr data-time="' + slotDate.format('HH:mm:ss') + '"' +
-          (isLabeled ? '' : ' class="fc-minor"') +
-          '>' +
-          (!isRTL ? axisHtml : '') +
-          '<td class="' + theme.getClass('widgetContent') + '"/>' +
-          (isRTL ? axisHtml : '') +
+        (isLabeled ? '' : ' class="fc-minor"') +
+        '>' +
+        (!isRTL ? axisHtml : '') +
+        '<td class="' + theme.getClass('widgetContent') + '"/>' +
+        (isRTL ? axisHtml : '') +
         '</tr>'
 
       slotTime.add(this.slotDuration)
@@ -277,7 +277,7 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
     // let dateProfile = this.dateProfile
     let theme = this.view.calendar.theme
 
-    this.dayRanges = this.schedules.rosters.map(function(roster) {
+    this.dayRanges = this.schedules.rosters.map(function (roster) {
       return new UnzonedRange(
         roster.schedule[0].start,
         roster.schedule[0].end
@@ -290,7 +290,7 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
     this.el.find('> .fc-bg').html(
       '<table class="' + theme.getClass('tableGrid') + '">' +
-        this.renderBgTrHtml(0) + // row=0
+      this.renderBgTrHtml(0) + // row=0
       '</table>'
     )
 
@@ -323,21 +323,21 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
     for (i = 0; i < this.colCnt; i++) {
       cellHtml +=
         '<td>' +
-          '<div class="fc-content-col">' +
-            '<div class="fc-event-container fc-helper-container"></div>' +
-            '<div class="fc-event-container"></div>' +
-            '<div class="fc-highlight-container"></div>' +
-            '<div class="fc-bgevent-container"></div>' +
-            '<div class="fc-business-container"></div>' +
-          '</div>' +
+        '<div class="fc-content-col">' +
+        '<div class="fc-event-container fc-helper-container"></div>' +
+        '<div class="fc-event-container"></div>' +
+        '<div class="fc-highlight-container"></div>' +
+        '<div class="fc-bgevent-container"></div>' +
+        '<div class="fc-business-container"></div>' +
+        '</div>' +
         '</td>'
     }
 
     skeletonEl = this.contentSkeletonEl = $(
       '<div class="fc-content-skeleton">' +
-        '<table>' +
-          '<tr>' + cellHtml + '</tr>' +
-        '</table>' +
+      '<table>' +
+      '<tr>' + cellHtml + '</tr>' +
+      '</table>' +
       '</div>'
     )
 
@@ -616,13 +616,9 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
 
   getHitFootprint(hit) {
-    console.log('hit:', hit)
-    let start = this.getCellTechnician(0, hit.col) // row=0
-    let time = this.computeSnapTime(hit.snap) // pass in the snap-index
+    let technicianSchedule = this.getCellTechnician(0, hit.col) // row=0
     let end
-    console.log('start:', start)
-    console.log('time:', time)
-    start.time(time)
+    let start = this.computeSnapTime(hit.snap, technicianSchedule)
     end = start.clone().add(this.snapDuration)
 
     return new ComponentFootprint(
@@ -633,8 +629,8 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
 
   // Given a row number of the grid, representing a "snap", returns a time (Duration) from its start-of-day
-  computeSnapTime(snapIndex) {
-    return moment.duration(this.dateProfile.minTime + this.snapDuration * snapIndex)
+  computeSnapTime(snapIndex, technicianSchedule) {
+    return moment.utc().startOf('day').add(technicianSchedule.schedule[0].start + this.snapDuration * snapIndex / 1000, 'seconds')
   }
 
 
