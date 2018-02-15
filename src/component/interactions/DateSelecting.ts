@@ -147,7 +147,8 @@ export default class DateSelecting extends Interaction {
 
     return new ComponentFootprint(
       new UnzonedRange(ms[0], ms[3]),
-      footprint0.isAllDay
+      footprint0.isAllDay,
+      footprint0.technicianSchedule
     )
   }
 

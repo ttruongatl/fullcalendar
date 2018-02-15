@@ -221,7 +221,7 @@ export interface OptionsInputBase {
   eventClick?(event: EventObjectInput, jsEvent: MouseEvent, view: View): boolean | void
   eventMouseover?(event: EventObjectInput, jsEvent: MouseEvent, view: View): void
   eventMouseout?(event: EventObjectInput, jsEvent: MouseEvent, view: View): void
-  select?(start: moment.Moment, end: moment.Moment, jsEvent: MouseEvent, view: View, resource?: any): void
+  select?(start: moment.Moment, end: moment.Moment, jsEvent: MouseEvent, technicianSchedule: any, view: View, resource?: any): void
   unselect?(view: View, jsEvent: Event): void
   eventDataTransform?(eventData: any): EventObjectInput
   loading?(isLoading: boolean, view: View): void

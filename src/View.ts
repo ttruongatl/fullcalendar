@@ -727,6 +727,7 @@ export default abstract class View extends InteractiveDateComponent {
         dateProfile.start,
         dateProfile.end,
         ev,
+        footprint.technicianSchedule,
         this
       ]
     })
