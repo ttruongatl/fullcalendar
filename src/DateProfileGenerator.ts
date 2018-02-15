@@ -15,8 +15,6 @@ export default class DateProfileGenerator {
     this._schedule = this._view.calendar.scheduleSources
     this._maxTime = moment.duration({ 'seconds': this._schedule.openHours.schedule[0].end }) || moment.duration(this.opt('minTime'))
     this._minTime = moment.duration({ 'seconds': this._schedule.openHours.schedule[0].start }) || moment.duration(this.opt('maxTime'))
-
-    console.log('view:', _view)
   }
 
 

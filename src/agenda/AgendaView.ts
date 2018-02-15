@@ -40,7 +40,6 @@ export default class AgendaView extends View {
 
   constructor(calendar, viewSpec) {
     super(calendar, viewSpec)
-    console.log('AgendaView')
 
     this.timeGrid = this.instantiateTimeGrid()
     this.addChild(this.timeGrid)

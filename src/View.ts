@@ -201,10 +201,8 @@ export default abstract class View extends InteractiveDateComponent {
 
 
   setDate(date) {
-    console.log('setDate')
     let currentDateProfile = this.get('dateProfile')
     let newDateProfile = this.dateProfileGenerator.build(date, undefined, true) // forceToValid=true
-    console.log('newDateProfile:', newDateProfile)
     if (
       !currentDateProfile ||
       !currentDateProfile.activeUnzonedRange.equals(newDateProfile.activeUnzonedRange)
