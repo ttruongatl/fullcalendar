@@ -6,10 +6,15 @@ import UnzonedRange from './models/UnzonedRange'
 export default class DateProfileGenerator {
 
   _view: any // discourage
-
+  _schedule: any
+  _minTime: any
+  _maxTime: any
 
   constructor(_view) {
     this._view = _view
+    this._schedule = this._view.calendar.scheduleSources
+    this._maxTime = moment.duration({ 'seconds': this._schedule.openHours.schedule[0].end }) || moment.duration(this.opt('minTime'))
+    this._minTime = moment.duration({ 'seconds': this._schedule.openHours.schedule[0].start }) || moment.duration(this.opt('maxTime'))
   }
 
 
@@ -55,11 +60,9 @@ export default class DateProfileGenerator {
   // Builds a structure holding dates/ranges for rendering around the given date.
   // Optional direction param indicates whether the date is being incremented/decremented
   // from its previous value. decremented = -1, incremented = 1 (default).
-  build(date, direction, forceToValid= false) {
+  build(date, direction, forceToValid = false) {
     let isDateAllDay = !date.hasTime()
     let validUnzonedRange
-    let minTime = null
-    let maxTime = null
     let currentInfo
     let isRangeAllDay
     let renderUnzonedRange
@@ -90,9 +93,7 @@ export default class DateProfileGenerator {
       activeUnzonedRange = activeUnzonedRange.intersect(currentInfo.unzonedRange)
     }
 
-    minTime = moment.duration(this.opt('minTime'))
-    maxTime = moment.duration(this.opt('maxTime'))
-    activeUnzonedRange = this.adjustActiveRange(activeUnzonedRange, minTime, maxTime)
+    activeUnzonedRange = this.adjustActiveRange(activeUnzonedRange, this._minTime, this._maxTime)
     activeUnzonedRange = activeUnzonedRange.intersect(validUnzonedRange) // might return null
 
     if (activeUnzonedRange) {
@@ -129,10 +130,10 @@ export default class DateProfileGenerator {
       renderUnzonedRange: renderUnzonedRange,
 
       // Duration object that denotes the first visible time of any given day
-      minTime: minTime,
+      minTime: this._minTime,
 
       // Duration object that denotes the exclusive visible end time of any given day
-      maxTime: maxTime,
+      maxTime: this._maxTime,
 
       isValid: isValid,
 
@@ -140,7 +141,7 @@ export default class DateProfileGenerator {
 
       // how far the current date will move for a prev/next operation
       dateIncrement: this.buildDateIncrement(currentInfo.duration)
-        // pass a fallback (might be null) ^
+      // pass a fallback (might be null) ^
     }
   }
 

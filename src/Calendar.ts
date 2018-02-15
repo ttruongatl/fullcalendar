@@ -49,6 +49,7 @@ export default class Calendar {
   currentDate: moment.Moment // unzoned moment. private (public API should use getDate instead)
   theme: Theme
   eventManager: EventManager
+  scheduleSources: Array<any>
   constraints: Constraints
   optionsManager: OptionsManager
   viewSpecManager: ViewSpecManager
@@ -1044,6 +1045,7 @@ export default class Calendar {
   initEventManager() {
     let eventManager = new EventManager(this)
     let rawSources = this.opt('eventSources') || []
+    this.scheduleSources = this.opt('scheduleSources')
     let singleRawSource = this.opt('events')
 
     this.eventManager = eventManager

@@ -6,11 +6,12 @@ export default class ComponentFootprint {
 
   unzonedRange: any
   isAllDay: boolean = false // component can choose to ignore this
+  technicianSchedule?: any
 
-
-  constructor(unzonedRange, isAllDay) {
+  constructor(unzonedRange, isAllDay, technicianSchedule?) {
     this.unzonedRange = unzonedRange
     this.isAllDay = isAllDay
+    this.technicianSchedule = technicianSchedule
   }
 
 

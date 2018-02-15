@@ -19,3 +19,7 @@ defineView('agendaWeek', {
   type: 'agenda',
   duration: { weeks: 1 }
 })
+
+defineView('agendaTechnicians', {
+  type: 'agenda'
+})
