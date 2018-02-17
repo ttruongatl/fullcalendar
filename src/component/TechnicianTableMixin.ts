@@ -6,6 +6,7 @@ export interface TechnicianTableInterface {
   techniciansPerRow: any
   rowCnt: any
   colCnt: any
+  technicians: any
   updateDayTable()
   renderHeadHtml()
   renderBgTrHtml(row)
@@ -30,6 +31,7 @@ export default class TechnicianTableMixin extends Mixin implements TechnicianTab
   rowCnt: any
   colCnt: any
   colHeadFormat: any
+  technicians: any
 
   // Populates internal variables used for date calculation and rendering
   updateDayTable() {
@@ -57,6 +59,11 @@ export default class TechnicianTableMixin extends Mixin implements TechnicianTab
 
     this.dayIndices = dayIndices
     this.techniciansPerRow = this.schedules.rosters.length
+    this.technicians = [];
+    let _this = this;
+    this.schedules.rosters.map(function (roster) {
+      _this.technicians.push(roster.technician._id)
+    })
     this.rowCnt = rowCnt
 
     this.updateDayTableCols()

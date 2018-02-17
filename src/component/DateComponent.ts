@@ -230,7 +230,7 @@ export default abstract class DateComponent extends Component {
   getBusinessHourSegs() { // recursive
     let segs = this.getOwnBusinessHourSegs()
 
-    this.iterChildren(function(child) {
+    this.iterChildren(function (child) {
       segs.push.apply(segs, child.getBusinessHourSegs())
     })
 
@@ -250,7 +250,7 @@ export default abstract class DateComponent extends Component {
   getEventSegs() { // recursive
     let segs = this.getOwnEventSegs()
 
-    this.iterChildren(function(child) {
+    this.iterChildren(function (child) {
       segs.push.apply(segs, child.getEventSegs())
     })
 
@@ -278,7 +278,7 @@ export default abstract class DateComponent extends Component {
 
     this.publiclyTrigger('eventAfterAllRender', {
       context: this,
-      args: [ this ]
+      args: [this]
     })
   }
 
@@ -294,7 +294,7 @@ export default abstract class DateComponent extends Component {
 
           this.publiclyTrigger('eventAfterRender', {
             context: legacy,
-            args: [ legacy, seg.el, this ]
+            args: [legacy, seg.el, this]
           })
         }
       })
@@ -319,7 +319,7 @@ export default abstract class DateComponent extends Component {
 
           this.publiclyTrigger('eventDestroy', {
             context: legacy,
-            args: [ legacy, seg.el, this ]
+            args: [legacy, seg.el, this]
           })
         }
       })
@@ -335,7 +335,7 @@ export default abstract class DateComponent extends Component {
   // RECURSIVE with subcomponents
   showEventsWithId(eventDefId) {
 
-    this.getEventSegs().forEach(function(seg) {
+    this.getEventSegs().forEach(function (seg) {
       if (
         seg.footprint.eventDef.id === eventDefId &&
         seg.el // necessary?
@@ -352,7 +352,7 @@ export default abstract class DateComponent extends Component {
   // RECURSIVE with subcomponents
   hideEventsWithId(eventDefId) {
 
-    this.getEventSegs().forEach(function(seg) {
+    this.getEventSegs().forEach(function (seg) {
       if (
         seg.footprint.eventDef.id === eventDefId &&
         seg.el // necessary?
@@ -375,7 +375,7 @@ export default abstract class DateComponent extends Component {
   renderDrag(eventFootprints, seg, isTouch) {
     let renderedHelper = false
 
-    this.iterChildren(function(child) {
+    this.iterChildren(function (child) {
       if (child.renderDrag(eventFootprints, seg, isTouch)) {
         renderedHelper = true
       }
@@ -440,7 +440,7 @@ export default abstract class DateComponent extends Component {
         componentFootprint,
         {
           getClasses() {
-            return [ 'fc-highlight' ]
+            return ['fc-highlight']
           }
         }
       )
@@ -558,7 +558,7 @@ export default abstract class DateComponent extends Component {
 
 
   eventRangeToEventFootprints(eventRange): EventFootprint[] {
-    return [ eventRangeToEventFootprint(eventRange) ]
+    return [eventRangeToEventFootprint(eventRange)]
   }
 
 
@@ -588,9 +588,8 @@ export default abstract class DateComponent extends Component {
     let segs
     let i
     let seg
-
+    eventFootprint.componentFootprint.technician = eventFootprint.eventDef.miscProps.technician
     segs = this.componentFootprintToSegs(eventFootprint.componentFootprint)
-
     for (i = 0; i < segs.length; i++) {
       seg = segs[i]
 
@@ -604,7 +603,6 @@ export default abstract class DateComponent extends Component {
       seg.footprint = eventFootprint
       // TODO: rename to seg.eventFootprint
     }
-
     return segs
   }
 
@@ -619,7 +617,7 @@ export default abstract class DateComponent extends Component {
 
 
   callChildren(methodName, args) {
-    this.iterChildren(function(child) {
+    this.iterChildren(function (child) {
       child[methodName].apply(child, args)
     })
   }

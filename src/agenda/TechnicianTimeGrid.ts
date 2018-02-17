@@ -30,6 +30,7 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
   schedules: TechnicianTableInterface['schedules']
   techniciansPerRow: TechnicianTableInterface['techniciansPerRow']
+  technicians: TechnicianTableInterface['technicians']
   colCnt: TechnicianTableInterface['colCnt']
   updateDayTable: TechnicianTableInterface['updateDayTable']
   renderHeadHtml: TechnicianTableInterface['renderHeadHtml']
@@ -81,43 +82,42 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
 
   // Slices up the given span (unzoned start/end with other misc data) into an array of segments
   componentFootprintToSegs(componentFootprint) {
-    let segs = this.sliceRangeByTimes(componentFootprint.unzonedRange)
+    let segs = this.sliceRangeByTimes(componentFootprint.unzonedRange, componentFootprint.technician)
     let i
-
+    console.log('componentFootprintToSegs:', componentFootprint)
     for (i = 0; i < segs.length; i++) {
       if (this.isRTL) {
-        segs[i].col = this.techniciansPerRow - 1 - segs[i].dayIndex
+        segs[i].col = this.techniciansPerRow - 1 - segs[i].technicianIndex
       } else {
-        segs[i].col = segs[i].dayIndex
+        segs[i].col = segs[i].technicianIndex
       }
     }
-
     return segs
   }
 
+  getTechnicianIndex(technicianId) {
+
+  }
 
   /* Date Handling
   ------------------------------------------------------------------------------------------------------------------*/
 
 
-  sliceRangeByTimes(unzonedRange) {
+  sliceRangeByTimes(unzonedRange, technician) {
     let segs = []
     let segRange
-    let dayIndex
+    let technicianIndex = this.technicians.indexOf(technician)
 
-    for (dayIndex = 0; dayIndex < this.techniciansPerRow; dayIndex++) {
-
-      segRange = unzonedRange.intersect(this.dayRanges[dayIndex])
-
-      if (segRange) {
-        segs.push({
-          startMs: segRange.startMs,
-          endMs: segRange.endMs,
-          isStart: segRange.isStart,
-          isEnd: segRange.isEnd,
-          dayIndex: dayIndex
-        })
-      }
+    segRange = unzonedRange.intersect(this.dayRanges[technicianIndex])
+    if (segRange) {
+      segs.push({
+        startMs: segRange.startMs,
+        endMs: segRange.endMs,
+        isStart: segRange.isStart,
+        isEnd: segRange.isEnd,
+        technicianIndex: technicianIndex,
+        technician: this.technicians[technician]
+      })
     }
 
     return segs
@@ -276,14 +276,12 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
   renderColumns() {
     // let dateProfile = this.dateProfile
     let theme = this.view.calendar.theme
-
     this.dayRanges = this.schedules.rosters.map(function (roster) {
       return new UnzonedRange(
-        roster.schedule[0].start,
-        roster.schedule[0].end
+        moment().startOf('day').add(roster.schedule[0].start, 'seconds'),
+        moment().startOf('day').add(roster.schedule[0].end, 'seconds')
       )
     })
-
     if (this.headContainerEl) {
       this.headContainerEl.html(this.renderHeadHtml())
     }
@@ -422,9 +420,10 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
     let segs = this.componentFootprintToSegs(
       new ComponentFootprint(
         new UnzonedRange(date, date.valueOf() + 1), // protect against null range
-        false // all-day
+        false, // all-day
       )
     )
+
     let top = this.computeDateTop(date, date)
     let nodes = []
     let i
@@ -531,10 +530,9 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
     let i
     let seg
     let dayDate
-
     for (i = 0; i < segs.length; i++) {
       seg = segs[i]
-      dayDate = this.schedules.rosters[seg.dayIndex]
+      dayDate = moment(this.schedules.rosters[seg.technicianIndex].schedule[0].date)
 
       seg.top = this.computeDateTop(seg.startMs, dayDate)
       seg.bottom = Math.max(
