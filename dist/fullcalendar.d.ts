@@ -1819,6 +1819,7 @@ declare module 'fullcalendar/TechnicianTableMixin' {
 	    techniciansPerRow: any;
 	    rowCnt: any;
 	    colCnt: any;
+	    technicians: any;
 	    updateDayTable(): any;
 	    renderHeadHtml(): any;
 	    renderBgTrHtml(row: any): any;
@@ -1837,6 +1838,7 @@ declare module 'fullcalendar/TechnicianTableMixin' {
 	    rowCnt: any;
 	    colCnt: any;
 	    colHeadFormat: any;
+	    technicians: any;
 	    updateDayTable(): void;
 	    updateDayTableCols(): void;
 	    computeColCnt(): any;
@@ -2174,6 +2176,7 @@ declare module 'fullcalendar/TechnicianTimeGrid' {
 	export class Default extends InteractiveDateComponent {
 	    schedules: TechnicianTableInterface['schedules'];
 	    techniciansPerRow: TechnicianTableInterface['techniciansPerRow'];
+	    technicians: TechnicianTableInterface['technicians'];
 	    colCnt: TechnicianTableInterface['colCnt'];
 	    updateDayTable: TechnicianTableInterface['updateDayTable'];
 	    renderHeadHtml: TechnicianTableInterface['renderHeadHtml'];
@@ -2208,7 +2211,8 @@ declare module 'fullcalendar/TechnicianTimeGrid' {
 	    businessSegs: any;
 	    constructor(view: any);
 	    componentFootprintToSegs(componentFootprint: any): any[];
-	    sliceRangeByTimes(unzonedRange: any): any[];
+	    getTechnicianIndex(technicianId: any): void;
+	    sliceRangeByTimes(unzonedRange: any, technician: any): any[];
 	    processOptions(): void;
 	    computeLabelInterval(slotDuration: any): any;
 	    renderDates(dateProfile: any): void;

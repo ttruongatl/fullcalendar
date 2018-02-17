@@ -8487,6 +8487,7 @@ var DateComponent = /** @class */ (function (_super) {
         var segs;
         var i;
         var seg;
+        eventFootprint.componentFootprint.technician = eventFootprint.eventDef.miscProps.technician;
         segs = this.componentFootprintToSegs(eventFootprint.componentFootprint);
         for (i = 0; i < segs.length; i++) {
             seg = segs[i];
@@ -9914,6 +9915,11 @@ var TechnicianTableMixin = /** @class */ (function (_super) {
         });
         this.dayIndices = dayIndices;
         this.techniciansPerRow = this.schedules.rosters.length;
+        this.technicians = [];
+        var _this = this;
+        this.schedules.rosters.map(function (roster) {
+            _this.technicians.push(roster.technician._id);
+        });
         this.rowCnt = rowCnt;
         this.updateDayTableCols();
     };
@@ -13976,35 +13982,37 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
     }
     // Slices up the given span (unzoned start/end with other misc data) into an array of segments
     TechnicianTimeGrid.prototype.componentFootprintToSegs = function (componentFootprint) {
-        var segs = this.sliceRangeByTimes(componentFootprint.unzonedRange);
+        var segs = this.sliceRangeByTimes(componentFootprint.unzonedRange, componentFootprint.technician);
         var i;
+        console.log('componentFootprintToSegs:', componentFootprint);
         for (i = 0; i < segs.length; i++) {
             if (this.isRTL) {
-                segs[i].col = this.techniciansPerRow - 1 - segs[i].dayIndex;
+                segs[i].col = this.techniciansPerRow - 1 - segs[i].technicianIndex;
             }
             else {
-                segs[i].col = segs[i].dayIndex;
+                segs[i].col = segs[i].technicianIndex;
             }
         }
         return segs;
     };
+    TechnicianTimeGrid.prototype.getTechnicianIndex = function (technicianId) {
+    };
     /* Date Handling
     ------------------------------------------------------------------------------------------------------------------*/
-    TechnicianTimeGrid.prototype.sliceRangeByTimes = function (unzonedRange) {
+    TechnicianTimeGrid.prototype.sliceRangeByTimes = function (unzonedRange, technician) {
         var segs = [];
         var segRange;
-        var dayIndex;
-        for (dayIndex = 0; dayIndex < this.techniciansPerRow; dayIndex++) {
-            segRange = unzonedRange.intersect(this.dayRanges[dayIndex]);
-            if (segRange) {
-                segs.push({
-                    startMs: segRange.startMs,
-                    endMs: segRange.endMs,
-                    isStart: segRange.isStart,
-                    isEnd: segRange.isEnd,
-                    dayIndex: dayIndex
-                });
-            }
+        var technicianIndex = this.technicians.indexOf(technician);
+        segRange = unzonedRange.intersect(this.dayRanges[technicianIndex]);
+        if (segRange) {
+            segs.push({
+                startMs: segRange.startMs,
+                endMs: segRange.endMs,
+                isStart: segRange.isStart,
+                isEnd: segRange.isEnd,
+                technicianIndex: technicianIndex,
+                technician: this.technicians[technician]
+            });
         }
         return segs;
     };
@@ -14122,7 +14130,7 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
         // let dateProfile = this.dateProfile
         var theme = this.view.calendar.theme;
         this.dayRanges = this.schedules.rosters.map(function (roster) {
-            return new UnzonedRange_1.default(roster.schedule[0].start, roster.schedule[0].end);
+            return new UnzonedRange_1.default(moment().startOf('day').add(roster.schedule[0].start, 'seconds'), moment().startOf('day').add(roster.schedule[0].end, 'seconds'));
         });
         if (this.headContainerEl) {
             this.headContainerEl.html(this.renderHeadHtml());
@@ -14223,8 +14231,7 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
         // seg system might be overkill, but it handles scenario where line needs to be rendered
         //  more than once because of columns with the same date (resources columns for example)
         var segs = this.componentFootprintToSegs(new ComponentFootprint_1.default(new UnzonedRange_1.default(date, date.valueOf() + 1), // protect against null range
-        false // all-day
-        ));
+        false));
         var top = this.computeDateTop(date, date);
         var nodes = [];
         var i;
@@ -14302,7 +14309,7 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
         var dayDate;
         for (i = 0; i < segs.length; i++) {
             seg = segs[i];
-            dayDate = this.schedules.rosters[seg.dayIndex];
+            dayDate = moment(this.schedules.rosters[seg.technicianIndex].schedule[0].date);
             seg.top = this.computeDateTop(seg.startMs, dayDate);
             seg.bottom = Math.max(seg.top + eventMinHeight, this.computeDateTop(seg.endMs, dayDate));
         }
