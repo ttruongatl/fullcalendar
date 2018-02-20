@@ -2211,7 +2211,6 @@ declare module 'fullcalendar/TechnicianTimeGrid' {
 	    businessSegs: any;
 	    constructor(view: any);
 	    componentFootprintToSegs(componentFootprint: any): any[];
-	    getTechnicianIndex(technicianId: any): void;
 	    sliceRangeByTimes(unzonedRange: any, technician: any): any[];
 	    processOptions(): void;
 	    computeLabelInterval(slotDuration: any): any;

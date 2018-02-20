@@ -8487,7 +8487,12 @@ var DateComponent = /** @class */ (function (_super) {
         var segs;
         var i;
         var seg;
-        eventFootprint.componentFootprint.technician = eventFootprint.eventDef.miscProps.technician;
+        if (eventFootprint.eventDef.miscProps.technician) {
+            eventFootprint.componentFootprint.technician = eventFootprint.eventDef.miscProps.technician._id;
+        }
+        else {
+            eventFootprint.componentFootprint.technician = eventFootprint.componentFootprint.technicianSchedule.technician._id;
+        }
         segs = this.componentFootprintToSegs(eventFootprint.componentFootprint);
         for (i = 0; i < segs.length; i++) {
             seg = segs[i];
@@ -13984,7 +13989,6 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
     TechnicianTimeGrid.prototype.componentFootprintToSegs = function (componentFootprint) {
         var segs = this.sliceRangeByTimes(componentFootprint.unzonedRange, componentFootprint.technician);
         var i;
-        console.log('componentFootprintToSegs:', componentFootprint);
         for (i = 0; i < segs.length; i++) {
             if (this.isRTL) {
                 segs[i].col = this.techniciansPerRow - 1 - segs[i].technicianIndex;
@@ -13994,8 +13998,6 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
             }
         }
         return segs;
-    };
-    TechnicianTimeGrid.prototype.getTechnicianIndex = function (technicianId) {
     };
     /* Date Handling
     ------------------------------------------------------------------------------------------------------------------*/

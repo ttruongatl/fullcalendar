@@ -84,7 +84,6 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
   componentFootprintToSegs(componentFootprint) {
     let segs = this.sliceRangeByTimes(componentFootprint.unzonedRange, componentFootprint.technician)
     let i
-    console.log('componentFootprintToSegs:', componentFootprint)
     for (i = 0; i < segs.length; i++) {
       if (this.isRTL) {
         segs[i].col = this.techniciansPerRow - 1 - segs[i].technicianIndex
@@ -93,10 +92,6 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
       }
     }
     return segs
-  }
-
-  getTechnicianIndex(technicianId) {
-
   }
 
   /* Date Handling

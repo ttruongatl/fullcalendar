@@ -588,7 +588,12 @@ export default abstract class DateComponent extends Component {
     let segs
     let i
     let seg
-    eventFootprint.componentFootprint.technician = eventFootprint.eventDef.miscProps.technician._id
+    if (eventFootprint.eventDef.miscProps.technician) { // load events
+      eventFootprint.componentFootprint.technician = eventFootprint.eventDef.miscProps.technician._id
+    } else { // click technician column
+      eventFootprint.componentFootprint.technician = eventFootprint.componentFootprint.technicianSchedule.technician._id
+    }
+
     segs = this.componentFootprintToSegs(eventFootprint.componentFootprint)
     for (i = 0; i < segs.length; i++) {
       seg = segs[i]
