@@ -477,7 +477,7 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
   computeDateTop(ms, startOfDayDate) {
     return this.computeTimeTop(
       moment.duration(
-        ms - startOfDayDate.clone().stripTime()
+        ms - startOfDayDate.clone()
       )
     )
   }
@@ -525,9 +525,12 @@ export default class TechnicianTimeGrid extends InteractiveDateComponent {
     let i
     let seg
     let dayDate
+    let timezone = this.opt('timezone')
     for (i = 0; i < segs.length; i++) {
       seg = segs[i]
-      dayDate = moment(this.schedules.rosters[seg.technicianIndex].schedule[0].date)
+
+      // create date at 00:00:00 in salon timezone
+      dayDate = moment.tz(this.view.calendar.currentDate.format('YYYY-MM-DD'), timezone)
 
       seg.top = this.computeDateTop(seg.startMs, dayDate)
       seg.bottom = Math.max(
