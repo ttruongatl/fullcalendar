@@ -29,6 +29,7 @@
   "releaseDate": "1970-01-01",
   "devDependencies": {
     "@types/jquery": "2.0.47",
+    "@types/moment-timezone": "^0.5.4",
     "awesome-typescript-loader": "^3.3.0",
     "bootstrap": "^3.3.7",
     "components-jqueryui": "github:components/jqueryui",
@@ -65,7 +66,7 @@
     "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-verbose-reporter": "0.0.6",
-    "moment-timezone": "^0.5.5",
+    "moment-timezone": "^0.5.14",
     "native-promise-only": "^0.8.1",
     "node-sass": "^4.7.2",
     "phantomjs-prebuilt": "^2.1.7",
