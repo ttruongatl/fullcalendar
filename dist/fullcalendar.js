@@ -14016,6 +14016,7 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
                 technician: this.technicians[technician]
             });
         }
+        console.log('segRange:', segRange);
         return segs;
     };
     /* Options
@@ -14273,7 +14274,9 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
     // `ms` can be a millisecond UTC time OR a UTC moment.
     // A `startOfDayDate` must be given for avoiding ambiguity over how to treat midnight.
     TechnicianTimeGrid.prototype.computeDateTop = function (ms, startOfDayDate) {
-        return this.computeTimeTop(moment.duration(ms - startOfDayDate.clone().stripTime()));
+        console.log('startOfDayDate:', ms - startOfDayDate.clone().stripTime());
+        console.log('startOfDayDate:', ms - moment(startOfDayDate).utc().add(startOfDayDate.utcOffset(), 'm').stripTime());
+        return this.computeTimeTop(moment.duration(ms - startOfDayDate.clone()));
     };
     // Computes the top coordinate, relative to the bounds of the grid, of the given time (a Duration).
     TechnicianTimeGrid.prototype.computeTimeTop = function (time) {
@@ -14309,10 +14312,15 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
         var i;
         var seg;
         var dayDate;
+        var timezone = this.opt('timezone');
         for (i = 0; i < segs.length; i++) {
             seg = segs[i];
-            dayDate = moment(this.schedules.rosters[seg.technicianIndex].schedule[0].date);
+            dayDate = this.view.calendar.currentDate;
+            console.log('day format:', dayDate.format('YYYY-MM-DD'));
+            dayDate = moment.tz(dayDate.format('YYYY-MM-DD'), timezone);
+            console.log('dayDate:', dayDate.valueOf());
             seg.top = this.computeDateTop(seg.startMs, dayDate);
+            console.log('top:', seg.top);
             seg.bottom = Math.max(seg.top + eventMinHeight, this.computeDateTop(seg.endMs, dayDate));
         }
     };
@@ -14328,6 +14336,7 @@ var TechnicianTimeGrid = /** @class */ (function (_super) {
     };
     // Generates an object with CSS properties for the top/bottom coordinates of a segment element
     TechnicianTimeGrid.prototype.generateSegVerticalCss = function (seg) {
+        console.log('seg:', seg);
         return {
             top: seg.top,
             bottom: -seg.bottom // flipped because needs to be space beyond bottom edge of event container
